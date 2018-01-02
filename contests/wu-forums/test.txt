@@ -1,0 +1,40 @@
+ A straight chain containing 'm' nodes, the last of which is linked to one of the 'n' nodes that are connected in cyclic fashion.  
+ 
+So the culprit link you can find by advancing m+n-1 links, and removing the last one. Now the question is how to do it?
+ 
+Consider first the method to detect the link -
+ 
+if p1 and p2 are two pointers that start at head, and p1 advances by 1 step in each interation and p2 by 2 steps, then they surely would meet
+at one of the nodes that are in the loop. Let the offset of this node (with respect to the first node of the loop, that is directly pointed to by the last node of the straight chain, as 0) be k, where 0 <= k < n  
+ 
+Let p1 be advanced by x steps, so p2 would have advanced by y = 2*x steps. We can model x as -
+ 
+x = m + r*n + k  
+ 
+where r is the number of cycles of the loop the pointer p1 travelled before it met p2 at the kth node (where r >= 0).
+ 
+Then for p2
+ 
+y = 2*x = 2*( m + r*n + k )
+  = 2*m + 2*r*n + 2*k
+ 
+or  
+ 
+y = ( m + 2*r*n + k ) + (m + k)
+ 
+for both p1 and p2 to meet at the kth node after x and y steps respectively, we can assert that (m + k) should be an integral multiple of n,
+ 
+or m + k = i*n
+or k = i*n - m
+ 
+since k >= 0, i should be the such that k comes out to be positive, also i should be as small as possible, because the loop will terminate once p1 and p2 are equal.
+ 
+If m+k is a multiple of n, then advancing a pointer m steps from the node where p1 and p2 met, should fetch the culprit node, the next pointer of which you can set to null to terminate the link.  
+ 
+But theoretically, it is impossible to find m and k separately in O(n) time. So a simple trick can be employed, keep a pointer at the kth node, and another at head, advance both one step each synchronously till, the next pointer of each is not equal, this condition would be precisely true for the culprit node only. So that solves the problem.
+ 
+ 
+The only exception where this fails is when m is zero, that is the list is a fully circular linked list. In that case you can check to find this case by testing whether the kth node found is same as the head itself, if so, simply traverse the loop once to find the node pointing to the head and set its next pointer to null!
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+
